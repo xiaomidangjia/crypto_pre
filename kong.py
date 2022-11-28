@@ -441,12 +441,20 @@ judge_res.to_csv('res_kong.csv')
 #======自动发邮件
 content = create_html_table(judge_res.head(10), f'判断日期{date_value}')
 
-mail = SendEmail(**mail_config)
-mail.attach_html_content(content)
-mail.reset_receivers(['lee_daowei@163.com'])
-# 设置邮件主题，发送
-subject = f'做空日期判断{date_value}'
-mail.send_email(subject)
+#设置服务器所需信息
+#163邮箱服务器地址
+mail_host = 'smtp.163.com'  
+#163用户名
+mail_user = 'lee_daowei'  
+#密码(部分邮箱为授权码) 
+mail_pass = 'LUOGRUMHHEGHMCNT'   
+#邮件发送方邮箱地址
+sender = 'lee_daowei@163.com'  
+#邮件接受方邮箱地址，注意需要[]包裹，这意味着你可以写多个邮件地址群发
+receivers = ['lee_daowei@163.com']  
+context = f'做空日期判断{date_value}'
+email(mail_host,mail_user,mail_pass,sender,receivers,context,content)
+
 
 
 

@@ -1,118 +1,43 @@
-# -*- coding:utf-8 -*-
-"""
-发邮件的类
-注意：端口用465，登录方法用SMTP_SSL
-smtplib.SMTP_SSL('smtp.mxhichina.com', 465)
-"""
 import smtplib
-from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from email.mime.application import MIMEApplication
-from email.header import Header
-from email.mime.image import MIMEImage
-import datetime
 
-# -*- encoding:utf8 -*-
-'''
-写日志的模块
-调用方法 from logger_config import logger
-logger.info("*****")
-'''
-import logging
-import logging.config
-import time, datetime
-from logging.handlers import TimedRotatingFileHandler
-
-
-# 设置logger
-logger = logging.getLogger()
-logger.setLevel(logging.INFO)
-formatter = logging.Formatter('%(asctime)s-%(pathname)s-%(lineno)d-%(levelname)s: %(message)s')
-# formatter.converter = time.gmtime
-console = logging.StreamHandler()
-console.setLevel(logging.INFO)
-console.setFormatter(formatter)
-logger.addHandler(console)
-
-
-# # 写log文件
-# logger_name = "main"
-# handler = TimedRotatingFileHandler('{}.log'.format(logger_name), 'midnight', backupCount=30, utc=True)
-# handler.setLevel(logging.INFO)
-# handler.setFormatter(formatter)
-# logger.addHandler(handler)
-
-logger.info('start logging...')
-class SendEmail(object):
-    def __init__(self, smtp_host, smtp_port, smtp_user, smtp_pass, receivers):
-        self.mail_host = smtp_host
-        self.mail_port = smtp_port
-        self.mail_user = smtp_user
-        self.mail_pass = smtp_pass
-        self.receivers = receivers
-        self.msg = MIMEMultipart('mixed')
+def email(mail_host,mail_user,mail_pass,sender,receivers,context,content):
+    #设置email信息
+    #邮件内容设置
+    message = MIMEText(content,'plain','utf-8')
+    #邮件主题       
+    message['Subject'] = context
+    #发送方信息
+    message['From'] = sender 
+    #接受方信息     
+    message['To'] = receivers[0]  
     
-    # 重新设置收件人列表
-    def reset_receivers(self, to_list):
-        self.receivers = to_list
-
-    # 添加正文内容 plain格式
-    def attach_plain_content(self, text):
-        self.msg.attach(MIMEText(text, 'plain', 'utf-8'))
-
-    # 添加正文内容 html格式
-    def attach_html_content(self, text):
-        self.msg.attach(MIMEText(text, 'html', 'utf-8'))
-
-    # 添加附件
-    def attach_attachment(self, content, file_name):
-        try:
-            file_msg = MIMEApplication(content)
-            file_msg.add_header('Content-Disposition', 'attachment', filename=Header(file_name, 'utf-8').encode())
-            self.msg.attach(file_msg)
-        except Exception as e:
-            logger.error(e)
-
-    # 读取本地文件添加附件
-    def attach_attachment_from_file(self, file_path, file_name):
-        try:
-            mail_body = open(file_path, 'rb').read()
-            file_msg = MIMEText(mail_body, 'html', 'utf-8')
-            file_msg.add_header("Content-Disposition", "attachment", filename=("utf-8", "", file_name))
-            self.msg.attach(file_msg)
-        except Exception as e:
-            logger.error(e)
-
-    # 添加图片
-    # 使用这个函数添加完图片后，还需把图片加到正文中content+= '<img src="cid:fig_name">'
-    def attach_fig(self, fig_path, fig_name):
-        image = MIMEImage(open(fig_path, 'rb').read())
-        image.add_header('Content-ID', '<{}>'.format(fig_name))
-        self.msg.attach(image)
-    
-    # 发送邮件，设置一下邮件的主题 subject
-    def send_email(self, subject):
-        self.msg['Subject'] = subject
-        self.msg['From'] = self.mail_user
-        self.msg['To'] = ";".join(self.receivers)
-        try:
-            s = smtplib.SMTP_SSL(self.mail_host, self.mail_port)
-            s.login(self.mail_user, self.mail_pass)
-            s.sendmail(self.mail_user, self.receivers, self.msg.as_string())
-            s.close()
-            logger.info("邮件发送成功，Subject:{}, From: {}, TO: {}".format( self.msg['Subject'], self.msg['From'], self.msg['To']))
-        except Exception as e:
-            logger.error(e)
-
-
-if __name__ == "__main__":
-    mail_config = {
-      "smtp_host": 'smtp.mxhichina.com',
-      "smtp_port": 465,
-      "smtp_user": "***@***.com",
-      "smtp_pass": "abcd@1234",
-      "receivers": ['user@***.com'],
-    }
-    mail = SendEmail(**mail_config)
-    mail.attach_plain_content("oooool")
-    mail.send_email("hello")
+    #登录并发送邮件
+    try:
+        smtpObj = smtplib.SMTP() 
+        #连接到服务器
+        smtpObj.connect(mail_host,25)
+        #登录到服务器
+        smtpObj.login(mail_user,mail_pass) 
+        #发送
+        smtpObj.sendmail(
+            sender,receivers,message.as_string()) 
+        #退出
+        smtpObj.quit() 
+        print('success')
+    except smtplib.SMTPException as e:
+        print('error',e) #打印错误
+if __name__ == '__main__':
+    #设置服务器所需信息
+    #163邮箱服务器地址
+    mail_host = 'smtp.163.com'  
+    #163用户名
+    mail_user = 'lee_daowei'  
+    #密码(部分邮箱为授权码) 
+    mail_pass = 'LUOGRUMHHEGHMCNT'   
+    #邮件发送方邮箱地址
+    sender = 'lee_daowei@163.com'  
+    #邮件接受方邮箱地址，注意需要[]包裹，这意味着你可以写多个邮件地址群发
+    receivers = ['lee_daowei@163.com']  
+    context = '新年快乐'
+    email(mail_host,mail_user,mail_pass,sender,receivers,context)
