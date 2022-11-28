@@ -1,7 +1,7 @@
 import smtplib
 from email.mime.text import MIMEText
 
-def email(mail_host,mail_user,mail_pass,sender,receivers,context,content):
+def email_sender(mail_host,mail_user,mail_pass,sender,receivers,context,content):
     #设置email信息
     #邮件内容设置
     message = MIMEText(content,'plain','utf-8')
@@ -40,4 +40,4 @@ if __name__ == '__main__':
     #邮件接受方邮箱地址，注意需要[]包裹，这意味着你可以写多个邮件地址群发
     receivers = ['lee_daowei@163.com']  
     context = '新年快乐'
-    email(mail_host,mail_user,mail_pass,sender,receivers,context)
+    email_sender(mail_host,mail_user,mail_pass,sender,receivers,context)

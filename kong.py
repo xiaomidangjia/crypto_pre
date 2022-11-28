@@ -12,7 +12,7 @@ import os
 import re
 from tqdm import tqdm
 import datetime
-from send_email import SendEmail
+from send_email import email_sender
 
 #=====定义函数====
 from HTMLTable import HTMLTable
@@ -453,7 +453,7 @@ sender = 'lee_daowei@163.com'
 #邮件接受方邮箱地址，注意需要[]包裹，这意味着你可以写多个邮件地址群发
 receivers = ['lee_daowei@163.com']  
 context = f'做空日期判断{date_value}'
-email(mail_host,mail_user,mail_pass,sender,receivers,context,content)
+email_sender(mail_host,mail_user,mail_pass,sender,receivers,context,content)
 
 
 
