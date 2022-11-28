@@ -17,11 +17,11 @@ def crypto_pre():
     type_ = request.form.get('type')
 
     if type_ == 'kong':
-        res_data = pd.read_csv('res_kong.csv')
-        res_data['date'] = pd.to_datetime(res_data['date'])
+        #res_data = pd.read_csv('res_kong.csv')
+        #res_data['date'] = pd.to_datetime(res_data['date'])
         
-        value = res_data[res_data.date==pd.to_datetime(date)]['value'][0]
-        
+        #value = res_data[res_data.date==pd.to_datetime(date)]['value'][0]
+        value = 1
         res_dict = {'value':value}
         
         ans_str = json.dumps(res_dict)
