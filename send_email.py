@@ -11,9 +11,38 @@ from email.mime.application import MIMEApplication
 from email.header import Header
 from email.mime.image import MIMEImage
 import datetime
-from .logger_config import logger
+
+# -*- encoding:utf8 -*-
+'''
+写日志的模块
+调用方法 from logger_config import logger
+logger.info("*****")
+'''
+import logging
+import logging.config
+import time, datetime
+from logging.handlers import TimedRotatingFileHandler
 
 
+# 设置logger
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
+formatter = logging.Formatter('%(asctime)s-%(pathname)s-%(lineno)d-%(levelname)s: %(message)s')
+# formatter.converter = time.gmtime
+console = logging.StreamHandler()
+console.setLevel(logging.INFO)
+console.setFormatter(formatter)
+logger.addHandler(console)
+
+
+# # 写log文件
+# logger_name = "main"
+# handler = TimedRotatingFileHandler('{}.log'.format(logger_name), 'midnight', backupCount=30, utc=True)
+# handler.setLevel(logging.INFO)
+# handler.setFormatter(formatter)
+# logger.addHandler(handler)
+
+logger.info('start logging...')
 class SendEmail(object):
     def __init__(self, smtp_host, smtp_port, smtp_user, smtp_pass, receivers):
         self.mail_host = smtp_host
