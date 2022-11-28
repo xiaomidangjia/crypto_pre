@@ -17,7 +17,7 @@ req_url = "http://172.23.198.69:80/crypto_pre"
 r = requests.post(req_url, data=test_data_1)
 print(r.content.decode('utf-8'))
 
-#print(r)
+print(r)
 
 
 

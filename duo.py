@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[10]:
+# In[4]:
 
 import json
 import requests
@@ -76,7 +76,7 @@ def create_html_table(df, title):
     return html_table
 
 # ======= 正式开始执行
-xiong_start_date = '2021-11-30'
+niu_start_date = '2022-10-30'
 
 url_address = [ 'https://api.glassnode.com/v1/metrics/market/price_usd_ohlc']
 url_name = ['k_fold']
@@ -102,7 +102,7 @@ for i in range(len(data_list)):
     df = data_list[i]
     result_data = result_data.merge(df,how='left',on='date')
 #last_data = result_data[(result_data.date>='2016-01-01') & (result_data.date<='2020-01-01')]
-last_data = result_data[(result_data.date>=xiong_start_date)]
+last_data = result_data[(result_data.date>=niu_start_date)]
 last_data = last_data.sort_values(by=['date'])
 last_data = last_data.reset_index(drop=True)
 #print(type(last_data))
@@ -122,17 +122,16 @@ res_data = pd.DataFrame({'date':date,'open':open_p,'close':close_p,'high':high_p
 # 价格大于过去两天
 # 价格超过5日均线值
 
-low_price = np.min(res_data['close']) * 1.05
-two_max = np.max(res_data['close'][-2:])
-mean_5_day = 0.97 * np.mean(res_data['close'][-5:])
+high_price = np.max(res_data['close']) * 0.95
+two_min = np.min(res_data['close'][-2:])
+mean_5_day = 0.985 * np.mean(res_data['close'][-5:])
 
-value_1 = np.max([low_price,two_max])
-value_2 = np.max([low_price,mean_5_day])
+value_1 = np.min([high_price,two_min]) # 小于
+value_2 = high_price
+value_3 = mean_5_day # 小于value2，大于value3
 
-last_value = np.min([value_1,value_2])
 date_value = res_data['date'][len(res_data)-1]
 
-# ============================================================================
 def judge_label1():
     url_address = [ 'https://api.glassnode.com/v1/metrics/market/price_usd_ohlc']
     url_name = ['k_fold']
@@ -158,7 +157,7 @@ def judge_label1():
         df = data_list[i]
         result_data = result_data.merge(df,how='left',on='date')
     #last_data = result_data[(result_data.date>='2016-01-01') & (result_data.date<='2020-01-01')]
-    last_data = result_data[(result_data.date>=xiong_start_date)]
+    last_data = result_data[(result_data.date>=niu_start_date)]
     last_data = last_data.sort_values(by=['date'])
     last_data = last_data.reset_index(drop=True)
     #print(type(last_data))
@@ -175,6 +174,7 @@ def judge_label1():
         low_p.append(last_data['value'][i]['l'])
     res_data = pd.DataFrame({'date':date,'open':open_p,'close':close_p,'high':high_p,'low':low_p})
     #res_data['judge'] = res_data['date'].apply(lambda x:cal(x))
+    #res_data = res_data[res_data.judge == num_list]
     #res_data = res_data[res_data.judge==1]
     res_data = res_data.sort_values(by=['date'])
     res_data = res_data.reset_index(drop=True)    
@@ -188,19 +188,18 @@ def judge_label1():
         per = (res_data['high'][i]-res_data['open'][i])/res_data['open'][i]
         ins = res_data[(res_data['date']<date_j)]
         #print(np.min(ins['open']),open_j,(open_j - np.min(ins['open']))/np.min(ins['open']))
-        #print(ins)
         ele = list(res_data['close'][i-2:i])
 
-        if (close_j - np.min(ins['close']))/np.min(ins['close']) > 0.05:
-            judge_kong = 1
+        if (close_j - np.max(ins['close']))/np.max(ins['close']) < -0.05:
+            judge_duo = 1
         else:
-            judge_kong = 0
+            judge_duo = 0
 
-        if close_j - np.max(ele) > 0:
-            judge_l3_max = 1
+        if close_j - np.min(ele) < 0:
+            judge_l3_min = 1
         else:
-            judge_l3_max = 0 
-        dat = pd.DataFrame({'date':date_j,'open':open_j,'close':close_j,'high':high_j,'low':low_j,'judge_l3_max':judge_l3_max,'judge_his':judge_kong},index=[0])
+            judge_l3_min = 0  
+        dat = pd.DataFrame({'date':date_j,'open':open_j,'close':close_j,'high':high_j,'low':low_j,'judge_l3_min':judge_l3_min,'judge_his':judge_duo},index=[0])
         res = pd.concat([res,dat])
     return res
 def judge_label2():
@@ -231,7 +230,7 @@ def judge_label2():
     last_data = result_data[(result_data.date>='2013-01-01')]
     last_data = last_data.sort_values(by=['date'])
     last_data = last_data.reset_index(drop=True)
-    #print(type(last_data))
+    print(type(last_data))
     date = []
     open_p = []
     close_p = []
@@ -259,7 +258,7 @@ def judge_label2():
         ins = ins.reset_index(drop=True)
         per = (res_data['close'][i] - np.mean(ins['close']))/np.mean(ins['close'])
         #if (ins['close'][4] - np.mean(ins['open']))/np.mean(ins['open']) > -0.03:
-        if per > -0.03: #-0.015
+        if per > -0.015:
             ma5.append(1)
         else:
             ma5.append(0)
@@ -268,9 +267,8 @@ def judge_label2():
         close_1.append(res_data['close'][i])
         high_1.append(res_data['high'][i])
         low_1.append(res_data['low'][i])    
-    result_data = pd.DataFrame({'date':date_1,'ma5_kong':ma5})
+    result_data = pd.DataFrame({'date':date_1,'ma5_duo':ma5})
     return result_data
-
 
 label1 = judge_label1()
 label2 = judge_label2()
@@ -279,6 +277,7 @@ last_df = last_label.sort_values(by='date')
 last_df = last_df.reset_index(drop=True)
 last_df = last_df.dropna()
 last_df = last_df.reset_index(drop=True)
+print(last_df)
 #探索价格波动
 url_address = [ 'https://api.glassnode.com/v1/metrics/market/price_usd_close',
                 'https://api.glassnode.com/v1/metrics/transactions/count']
@@ -345,26 +344,26 @@ i = 0
 while i <= len(last_df):
     #print(i)
     judge_his = last_df['judge_his'][i]
-    ma5_kong = last_df['ma5_kong'][i]
-    judge_l3_max = last_df['judge_l3_max'][i]
-    if judge_his == 1 and ( judge_l3_max == 1 or ma5_kong == 1):
+    ma5_duo = last_df['ma5_duo'][i]
+    judge_l3_min = last_df['judge_l3_min'][i]
+    if judge_his == 1 and  (judge_l3_min == 1 or  ma5_duo == 1):
         open_price = last_df['open'][i+1]
         start_date = last_df['date'][i+1]
-        #print(start_date)
+        print(start_date)
         open_p.append(open_price)
         date_s.append(start_date)
         sub_later_data = res_data[res_data.new_date>=start_date]
         sub_later_data = sub_later_data.sort_values(by=['new_date','hour'])
         sub_later_data = sub_later_data.reset_index(drop=True)
         for j in range(len(sub_later_data)):
-            #print(j)
+            #print('====' +str(j))
             close_price = sub_later_data['price'][j]
             close_date = sub_later_data['new_date'][j]
-            if (close_price - open_price)/open_price >= 0.07:
+            if (close_price - open_price)/open_price >= 0.06:
                 close_p.append(close_price)
                 date_e.append(close_date)
-                res.append(0)
-                per.append(-0.07)
+                res.append(1)
+                per.append(0.06)
 
                 find_i = last_df[last_df.date==close_date]
                 i = find_i.index[0]
@@ -373,14 +372,14 @@ while i <= len(last_df):
             elif (close_price - open_price)/open_price <= -0.06:
                 close_p.append(close_price)
                 date_e.append(close_date)
-                res.append(1)
-                per.append(0.06)
+                res.append(0)
+                per.append(-0.06)
 
                 find_i = last_df[last_df.date==close_date]
                 i = find_i.index[0]
                 #i += 1
                 break
-            elif (close_price - open_price)/open_price > -0.06 and (close_price - open_price)/open_price < -0.03:
+            elif (close_price - open_price)/open_price > 0.03 and (close_price - open_price)/open_price < 0.06:
                 sub_later_data['label'] = sub_later_data.index
                 sub_later_data_1 = sub_later_data[sub_later_data.label > j]
                 sub_later_data_1 = sub_later_data_1.sort_values(by=['new_date','hour'])
@@ -389,8 +388,8 @@ while i <= len(last_df):
                     #print(w)
                     close_price = sub_later_data_1['price'][w]
                     close_date = sub_later_data_1['new_date'][w]
-                    if (close_price - open_price)/open_price >= -0.03:
-                        close_p.append(open_price*0.97)
+                    if (close_price - open_price)/open_price <= 0.03:
+                        close_p.append(open_price*1.03)
                         date_e.append(close_date)
                         res.append(1)
                         per.append(0.03)
@@ -399,8 +398,8 @@ while i <= len(last_df):
                         i = find_i.index[0]
                         #i += 1
                         break
-                    elif (close_price - open_price)/open_price <= -0.06:
-                        close_p.append(close_price*0.94)
+                    elif (close_price - open_price)/open_price >= 0.06:
+                        close_p.append(close_price*1.06)
                         date_e.append(close_date)
                         res.append(1)
                         per.append(0.06)
@@ -424,8 +423,7 @@ if len(date_e) < len(date_s):
     close_p.append(999999999)
     per.append(0)
     res.append(0)
-
-res_df = pd.DataFrame({'date_s':date_s,'date_e':date_e,'open_p':open_p,'close_p':close_p,'per':per,'res':res,'cycle':[num]*len(res)})
+res_df = pd.DataFrame({'date_s':date_s,'date_e':date_e,'open_p':open_p,'close_p':close_p,'per':per,'res':res})
 if res_df['date_e'][len(res_df)-1] == '9999-99-99':
     status = 2 # 未知
     up_date = '9999-99-99'
@@ -435,9 +433,8 @@ elif res_df['date_e'][len(res_df)-1] != '9999-99-99' and res_df['res'][len(res_d
 else:
     status = 0 # 失败
     up_date = res_df['date_e'][len(res_df)-1]
-judge_res = pd.DataFrame({'date':date_value,'value':last_value,'status':status,'up_date':up_date},index=[0])
-judge_res.to_csv('res_kong.csv')
-
+judge_res = pd.DataFrame({'date':date_value,'value_1':value_1,'value_2':value_2,'value_3':value_3,'status':status,'up_date':up_date},index=[0])
+judge_res.to_csv('res_duo.csv')
 #======自动发邮件
 content = create_html_table(judge_res.head(10), f'判断日期{date_value}')
 
@@ -445,11 +442,5 @@ mail = SendEmail(**mail_config)
 mail.attach_html_content(content)
 mail.reset_receivers(['lee_daowei@163.com'])
 # 设置邮件主题，发送
-subject = f'做空日期判断{date_value}'
+subject = f'做多日期判断{date_value}'
 mail.send_email(subject)
-
-
-
-
-
-
