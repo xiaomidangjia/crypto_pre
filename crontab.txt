@@ -1,0 +1,14 @@
+1. 写好代码 ***.py
+
+2. 写对应的shell文件 ***.sh
+   例子：
+   #!/bin/bash
+   cd /home/data-python/user
+   /home/data-python/anaconda3/bin/python3.7 send_mail.py;
+
+3. 修改文件权限 
+   chmod 754 ***.sh
+
+crontab -e
+
+30 22 * * * /root/crypto_pre/shell_project.sh >> /root/crypto_pre/cron.log 2>&1

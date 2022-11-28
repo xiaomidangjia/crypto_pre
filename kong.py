@@ -130,7 +130,7 @@ value_1 = np.max([low_price,two_max])
 value_2 = np.max([low_price,mean_5_day])
 
 last_value = np.min([value_1,value_2])
-date_value = res_data['date'][len(res_data)-1]
+date_value = res_data['date'][len(res_data)-1] + datetime.timedelta(days=2)
 
 # ============================================================================
 def judge_label1():
@@ -451,7 +451,7 @@ mail_pass = 'GKXGKVGTYBGRMAVE'
 sender = 'lee_daowei@163.com'
 #邮件接受方邮箱地址，注意需要[]包裹，这意味着你可以写多个邮件地址群发
 receivers = ['lee_daowei@163.com']  
-context = f'做多日期判断{date_value}'
+context = f'做空日期判断{date_value}'
 email_sender(mail_host,mail_user,mail_pass,sender,receivers,context,content)
 
 

@@ -76,7 +76,7 @@ def create_html_table(df, title):
     return html_table
 
 # ======= 正式开始执行
-niu_start_date = '2022-10-30'
+niu_start_date = '2022-09-30'
 
 url_address = [ 'https://api.glassnode.com/v1/metrics/market/price_usd_ohlc']
 url_name = ['k_fold']
@@ -130,7 +130,7 @@ value_1 = np.min([high_price,two_min]) # 小于
 value_2 = high_price
 value_3 = mean_5_day # 小于value2，大于value3
 
-date_value = res_data['date'][len(res_data)-1]
+date_value = res_data['date'][len(res_data)-1] + datetime.timedelta(days=2)
 
 def judge_label1():
     url_address = [ 'https://api.glassnode.com/v1/metrics/market/price_usd_ohlc']
