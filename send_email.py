@@ -3,7 +3,7 @@ from email.mime.text import MIMEText
 
 def email_sender(mail_host,mail_user,mail_pass,sender,receivers,context,content):
     #邮件内容设置
-    message = MIMEText(content,'plain','utf-8')
+    message = MIMEText(content,'html','utf-8')
     #邮件主题       
     message['Subject'] = context
     #发送方信息
