@@ -17,20 +17,39 @@ def crypto_pre():
     type_ = request.form.get('type')
 
     if type_ == 'kong':
-        #res_data = pd.read_csv('res_kong.csv')
-        #res_data['date'] = pd.to_datetime(res_data['date'])
+
+        p = []
+        with open("/root/crypto_pre/res_kong.csv", 'r', encoding="UTF-8") as fr:
+            reader = csv.reader(fr)
+            for index, line in enumerate(reader):
+                if index == 0:
+                    continue
+                p.append(line)
+        res_data = pd.DataFrame(p)
+        res_data['date'] = res_data.iloc[:,0]
+        res_data['value'] = res_data.iloc[:,1]
+        res_data['date'] = pd.to_datetime(res_data['date'])
         
-        #value = res_data[res_data.date==pd.to_datetime(date)]['value'][0]
-        value = 1
+        value = res_data[res_data.date==pd.to_datetime(date)]['value'][0]
+
         res_dict = {'value':value}
         
         ans_str = json.dumps(res_dict)
     else:
-        res_data = pd.read_csv('res_duo.csv')
+        p = []
+        with open("/root/crypto_pre/res_duo.csv", 'r', encoding="UTF-8") as fr:
+            reader = csv.reader(fr)
+            for index, line in enumerate(reader):
+                if index == 0:
+                    continue
+                p.append(line)
+        res_data = pd.DataFrame(p)
+        res_data['date'] = res_data.iloc[:,0]
+        res_data['value'] = res_data.iloc[:,1]
         res_data['date'] = pd.to_datetime(res_data['date'])
         
         value = res_data[res_data.date==pd.to_datetime(date)]['value'][0]
-        
+
         res_dict = {'value':value}
         
         ans_str = json.dumps(res_dict)
