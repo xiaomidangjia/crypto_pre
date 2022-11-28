@@ -13,7 +13,7 @@ test_data_1 = {
     "date":'2022-11-27'
     }
 
-req_url = "http://172.23.198.69:80/crypto_pre"
+req_url = "http://8.219.61.64:80/crypto_pre"
 r = requests.post(req_url, data=test_data_1)
 print(r.content.decode('utf-8'))
 

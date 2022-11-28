@@ -93,6 +93,6 @@ def crypto_pre():
     return ans_str
 
 if __name__ == '__main__':
-    app.run("172.23.198.69", port=80)
+    app.run("8.219.61.64", port=80)
 
 

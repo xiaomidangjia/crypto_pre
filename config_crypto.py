@@ -6,7 +6,7 @@ import multiprocessing
 
 #debug = True
 #loglevel = 'debug'
-bind = "172.23.198.69:80"
+bind = "8.219.61.64:80"
 #后台执行，为True
 daemon = True
 timeout = 300
