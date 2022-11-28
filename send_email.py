@@ -34,7 +34,7 @@ if __name__ == '__main__':
     #163用户名
     mail_user = 'lee_daowei'  
     #密码(部分邮箱为授权码) 
-    mail_pass = 'LUOGRUMHHEGHMCNT'   
+    mail_pass = 'KIGWYJYDAOXLFRFB'   
     #邮件发送方邮箱地址
     sender = 'lee_daowei@163.com'  
     #邮件接受方邮箱地址，注意需要[]包裹，这意味着你可以写多个邮件地址群发
