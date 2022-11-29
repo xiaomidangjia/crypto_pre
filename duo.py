@@ -341,7 +341,7 @@ close_p = []
 res = []
 per = []
 i = 0
-while i <= len(last_df):
+while i < len(last_df)-1:
     #print(i)
     judge_his = last_df['judge_his'][i]
     ma5_duo = last_df['ma5_duo'][i]
@@ -367,7 +367,6 @@ while i <= len(last_df):
 
                 find_i = last_df[last_df.date==close_date]
                 i = find_i.index[0]
-                i += 5
                 break
             elif (close_price - open_price)/open_price <= -0.06:
                 close_p.append(close_price)
@@ -377,7 +376,6 @@ while i <= len(last_df):
 
                 find_i = last_df[last_df.date==close_date]
                 i = find_i.index[0]
-                #i += 1
                 break
             elif (close_price - open_price)/open_price > 0.03 and (close_price - open_price)/open_price < 0.06:
                 sub_later_data['label'] = sub_later_data.index
@@ -396,27 +394,32 @@ while i <= len(last_df):
 
                         find_i = last_df[last_df.date==close_date]
                         i = find_i.index[0]
-                        #i += 1
+                        #i += 3
                         break
                     elif (close_price - open_price)/open_price >= 0.06:
-                        close_p.append(close_price*1.06)
+                        close_p.append(close_price*1.1)
                         date_e.append(close_date)
                         res.append(1)
                         per.append(0.06)
 
                         find_i = last_df[last_df.date==close_date]
                         i = find_i.index[0]
-                        #i += 1
                         break
                     else:
-                        continue
+                        if w == len(sub_later_data_1)-1:
+                            i += 1
+                            break
+                        else:
+                            continue
                 break
             else:
-                i += 1
-                continue
+                if j == len(sub_later_data)-1:
+                    i += 1
+                    break
+                else:
+                    continue
     else:
         i += 1
-        continue
 
 if len(date_e) < len(date_s):
     date_e.append('9999-99-99')

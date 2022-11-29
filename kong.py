@@ -342,7 +342,7 @@ close_p = []
 res = []
 per = []
 i = 0
-while i <= len(last_df):
+while i < len(last_df)-1:
     #print(i)
     judge_his = last_df['judge_his'][i]
     ma5_kong = last_df['ma5_kong'][i]
@@ -410,14 +410,20 @@ while i <= len(last_df):
                         #i += 1
                         break
                     else:
-                        continue
+                        if w == len(sub_later_data_1)-1:
+                            i += 1
+                            break
+                        else:
+                            continue
                 break
             else:
-                i += 1
-                continue
+                if j == len(sub_later_data)-1:
+                    i += 1
+                    break
+                else:
+                    continue
     else:
         i += 1
-        continue
 
 if len(date_e) < len(date_s):
     date_e.append('9999-99-99')
