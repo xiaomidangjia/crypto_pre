@@ -34,17 +34,21 @@ def crypto_pre():
         res_data['date'] = pd.to_datetime(res_data['date'])
         res_data['up_date'] = pd.to_datetime(res_data['up_date'])
         
-        value = res_data[res_data.date==pd.to_datetime(date)]['value'][0]
-
-        if res_data['status'][0]==2:
-            r_value = 0
-        elif res_data['status'][0]==0:
-            if (pd.to_datetime(res_data['date'][0]) - pd.to_datetime(res_data['up_date'][0]) ).days >= 6:
-                r_value = value
-            else:
-                r_value = 0 
+        res_data = res_data[res_data.date==pd.to_datetime(date)]
+        if len(res_data) == 0:
+            r_value = 'error'
         else:
-            r_value = value
+            value = ['value'][0]
+
+            if res_data['status'][0]==2:
+                r_value = 9999999999999
+            elif res_data['status'][0]==0:
+                if (pd.to_datetime(res_data['date'][0]) - pd.to_datetime(res_data['up_date'][0]) ).days >= 6:
+                    r_value = value
+                else:
+                    r_value = 9999999999999 
+            else:
+                r_value = value
 
         res_dict = {'value':r_value}
         
@@ -68,24 +72,30 @@ def crypto_pre():
 
         res_data['date'] = pd.to_datetime(res_data['date'])
         res_data['up_date'] = pd.to_datetime(res_data['up_date'])
-        
-        if res_data['status'][0]==2:
+        res_data = res_data[res_data.date==pd.to_datetime(date)]
+
+        if len(res_data) == 0:
             r_value_1 = 0
             r_value_2 = 0
-            r_value_3 = 9999999999
-        elif res_data['status'][0]==0:
-            if (pd.to_datetime(res_data['date'][0]) - pd.to_datetime(res_data['up_date'][0]) ).days >= 6:
+            r_value_3 = 9999999999999
+        else:   
+            if res_data['status'][0]==2:
+                r_value_1 = 0
+                r_value_2 = 0
+                r_value_3 = 9999999999999
+            elif res_data['status'][0]==0:
+                if (pd.to_datetime(res_data['date'][0]) - pd.to_datetime(res_data['up_date'][0]) ).days >= 6:
+                    r_value_1 = res_data['value_1'][0]
+                    r_value_2 = res_data['value_2'][0]
+                    r_value_3 = res_data['value_3'][0]
+                else:
+                    r_value_1 = 0
+                    r_value_2 = 0
+                    r_value_3 = 9999999999999
+            else:
                 r_value_1 = res_data['value_1'][0]
                 r_value_2 = res_data['value_2'][0]
                 r_value_3 = res_data['value_3'][0]
-            else:
-                r_value_1 = 0
-                r_value_2 = 0
-                r_value_3 = 9999999999
-        else:
-            r_value_1 = res_data['value_1'][0]
-            r_value_2 = res_data['value_2'][0]
-            r_value_3 = res_data['value_3'][0]
 
         res_dict = {'value_1':r_value_1,'value_2':r_value_2,'value_3':r_value_3}
         

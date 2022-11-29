@@ -12,3 +12,67 @@
 crontab -e
 
 30 22 * * * /root/crypto_pre/shell_project.sh >> /root/crypto_pre/cron.log 2>&1
+
+
+
+
+
+pip install supervisor
+
+
+mkdir /etc/supervisor
+echo_supervisord_conf > /etc/supervisor/supervisord.conf
+
+
+[include]
+#files = /etc/supervisor/config.d/*.ini
+
+在这个下面加入各个执行程序，如：
+
+[program:test_mask_img]
+command=/root/anaconda3/bin/gunicorn -c config_mask_img.py test_mask_img:app                                ; supervisor启动命令
+directory=/root/disk/liweiwei/modelDeploy/mmdetection/flask                            ; 项目的文件夹路径
+startsecs=0                                                                             ; 启动时间
+stopwaitsecs=0                                                                          ; 终止等待时间
+autostart=true                                                                         ; 是否自动启动
+autorestart=true                                                                       ; 是否自动重启
+stdout_logfile=/root/disk/liweiwei/modelDeploy/mmdetection/flask/logs/test_mask_img.log      ; log 日志
+stderr_logfile=/root/disk/liweiwei/modelDeploy/mmdetection/flask/logs/test_mask_img.err
+redirect_stderr=true
+stdout_logfile_maxbytes=250MB  ; 最多保留多少份日志文件
+stdout_logfile_backups=10
+stderr_logfile_maxbytes=250MB
+stderr_logfile_backups=10
+
+[program:test_face_helmet]
+command=/root/anaconda3/bin/python test_face_helmet.py                              ; supervisor启动命令
+directory=/root/disk/liweiwei/modelDeploy/face_recong/flask                            ; 项目的文件夹路径
+startsecs=0                                                                             ; 启动时间
+stopwaitsecs=0                                                                          ; 终止等待时间
+autostart=true                                                                         ; 是否自动启动
+autorestart=true                                                                       ; 是否自动重启
+stdout_logfile=/root/disk/liweiwei/modelDeploy/face_recong/flask/logs/test_face_helmet.log      ; log 日志
+stderr_logfile=/root/disk/liweiwei/modelDeploy/face_recong/flask/logs/test_face_helmet.err
+redirect_stderr=true
+stdout_logfile_maxbytes=250MB  ; 最多保留多少份日志文件
+stdout_logfile_backups=10
+stderr_logfile_maxbytes=250MB
+stderr_logfile_backups=10
+
+
+
+启动服务：
+/root/anaconda3/bin/supervisord -c /etc/supervisor/supervisord.conf
+
+#kill
+ps -ef | grep supervisord
+kill -s SIGTERM 5241
+
+
+
+Ubuntu开机自启
+
+在/etc/rc.local的exit 0之前加上
+
+export LD_LIBRARY_PATH=/usr/local/cuda-10.0/lib64
+/root/anaconda3/bin/supervisord -c /etc/supervisor/supervisord.conf
