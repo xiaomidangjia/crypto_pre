@@ -397,7 +397,7 @@ while i < len(last_df)-1:
                         #i += 3
                         break
                     elif (close_price - open_price)/open_price >= 0.06:
-                        close_p.append(close_price*1.1)
+                        close_p.append(close_price*1.06)
                         date_e.append(close_date)
                         res.append(1)
                         per.append(0.06)
@@ -407,14 +407,14 @@ while i < len(last_df)-1:
                         break
                     else:
                         if w == len(sub_later_data_1)-1:
-                            i += 1
+                            i += 100000000
                             break
                         else:
                             continue
                 break
             else:
                 if j == len(sub_later_data)-1:
-                    i += 1
+                    i += 100000000
                     break
                 else:
                     continue
