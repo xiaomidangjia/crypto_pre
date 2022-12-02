@@ -426,16 +426,16 @@ while i < len(last_df)-1:
         i += 1
 
 if len(date_e) < len(date_s):
-    date_e.append('9999-99-99')
+    date_e.append('2099-12-31')
     close_p.append(999999999)
     per.append(0)
     res.append(0)
 
 res_df = pd.DataFrame({'date_s':date_s,'date_e':date_e,'open_p':open_p,'close_p':close_p,'per':per,'res':res,'cycle':[num]*len(res)})
-if res_df['date_e'][len(res_df)-1] == '9999-99-99':
+if res_df['date_e'][len(res_df)-1] == '2099-12-31':
     status = 2 # 未知
-    up_date = '9999-99-99'
-elif res_df['date_e'][len(res_df)-1] != '9999-99-99' and res_df['res'][len(res_df)-1] == 1:
+    up_date = '2099-12-31'
+elif res_df['date_e'][len(res_df)-1] != '2099-12-31' and res_df['res'][len(res_df)-1] == 1:
     status = 1 # 成功
     up_date = res_df['date_e'][len(res_df)-1]
 else:
