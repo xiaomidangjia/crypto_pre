@@ -83,15 +83,6 @@ def crypto_pre():
                 r_value_1 = 0
                 r_value_2 = 0
                 r_value_3 = 9999999999999
-            elif res_data['status'][0]==0:
-                if (pd.to_datetime(res_data['date'][0]) - pd.to_datetime(res_data['up_date'][0]) ).days >= 6:
-                    r_value_1 = res_data['value_1'][0]
-                    r_value_2 = res_data['value_2'][0]
-                    r_value_3 = res_data['value_3'][0]
-                else:
-                    r_value_1 = 0
-                    r_value_2 = 0
-                    r_value_3 = 9999999999999
             else:
                 r_value_1 = res_data['value_1'][0]
                 r_value_2 = res_data['value_2'][0]
@@ -103,6 +94,6 @@ def crypto_pre():
     return ans_str
 
 if __name__ == '__main__':
-    app.run("8.219.61.64", port=80)
+    app.run("0.0.0.0", port=80)
 
 

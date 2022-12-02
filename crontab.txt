@@ -11,7 +11,7 @@
 
 crontab -e
 
-30 22 * * * /root/crypto_pre/shell_project.sh >> /root/crypto_pre/cron.log 2>&1
+30 20 * * * /root/crypto_pre/shell_project.sh >> /root/crypto_pre/cron.log 2>&1
 
 
 
