@@ -368,11 +368,11 @@ while i < len(last_df)-1:
                 find_i = last_df[last_df.date==close_date]
                 i = find_i.index[0]
                 break
-            elif (close_price - open_price)/open_price <= -0.06:
+            elif (close_price - open_price)/open_price <= -0.05:
                 close_p.append(close_price)
                 date_e.append(close_date)
                 res.append(0)
-                per.append(-0.06)
+                per.append(-0.05)
 
                 find_i = last_df[last_df.date==close_date]
                 i = find_i.index[0]
