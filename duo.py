@@ -359,11 +359,11 @@ while i < len(last_df)-1:
             #print('====' +str(j))
             close_price = sub_later_data['price'][j]
             close_date = sub_later_data['new_date'][j]
-            if (close_price - open_price)/open_price >= 0.06:
+            if (close_price - open_price)/open_price >= 0.09:
                 close_p.append(close_price)
                 date_e.append(close_date)
                 res.append(1)
-                per.append(0.06)
+                per.append(0.09)
 
                 find_i = last_df[last_df.date==close_date]
                 i = find_i.index[0]
@@ -377,7 +377,7 @@ while i < len(last_df)-1:
                 find_i = last_df[last_df.date==close_date]
                 i = find_i.index[0]
                 break
-            elif (close_price - open_price)/open_price > 0.03 and (close_price - open_price)/open_price < 0.06:
+            elif (close_price - open_price)/open_price > 0.03 and (close_price - open_price)/open_price < 0.09:
                 sub_later_data['label'] = sub_later_data.index
                 sub_later_data_1 = sub_later_data[sub_later_data.label > j]
                 sub_later_data_1 = sub_later_data_1.sort_values(by=['new_date','hour'])
@@ -396,11 +396,11 @@ while i < len(last_df)-1:
                         i = find_i.index[0]
                         #i += 3
                         break
-                    elif (close_price - open_price)/open_price >= 0.06:
-                        close_p.append(close_price*1.06)
+                    elif (close_price - open_price)/open_price >= 0.09:
+                        close_p.append(close_price*1.09)
                         date_e.append(close_date)
                         res.append(1)
-                        per.append(0.06)
+                        per.append(0.09)
 
                         find_i = last_df[last_df.date==close_date]
                         i = find_i.index[0]
