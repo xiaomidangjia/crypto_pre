@@ -27,28 +27,15 @@ def crypto_pre():
                 p.append(line)
         res_data = pd.DataFrame(p)
         res_data['date'] = res_data.iloc[:,1]
-        res_data['value'] = res_data.iloc[:,2]
-        res_data['status'] = res_data.iloc[:,3]
-        res_data['up_date'] = res_data.iloc[:,4]
+        res_data['status'] = res_data.iloc[:,2]
 
         res_data['date'] = pd.to_datetime(res_data['date'])
-        res_data['up_date'] = pd.to_datetime(res_data['up_date'])
 
         res_data = res_data[res_data.date==pd.to_datetime(date)]
         if len(res_data) == 0:
             r_value = 'error'
         else:
-            value = res_data['value'][0]
-
-            if str(res_data['status'][0])=='2':
-                r_value = 9999999999999
-            elif str(res_data['status'][0])=='0':
-                if (pd.to_datetime(res_data['date'][0]) - pd.to_datetime(res_data['up_date'][0]) ).days >= 6:
-                    r_value = value
-                else:
-                    r_value = 9999999999999 
-            else:
-                r_value = value
+            r_value = res_data['status'][0]
 
         res_dict = {'value':r_value}
 
@@ -63,11 +50,7 @@ def crypto_pre():
                 p.append(line)
         res_data = pd.DataFrame(p)
         res_data['date'] = res_data.iloc[:,1]
-        res_data['value_1'] = res_data.iloc[:,2]
-        res_data['value_2'] = res_data.iloc[:,3]
-        res_data['value_3'] = res_data.iloc[:,4]
-        res_data['status'] = res_data.iloc[:,5]
-        res_data['up_date'] = res_data.iloc[:,6]
+        res_data['status'] = res_data.iloc[:,2]
 
 
         res_data['date'] = pd.to_datetime(res_data['date'])
@@ -75,20 +58,11 @@ def crypto_pre():
         res_data = res_data[res_data.date==pd.to_datetime(date)]
 
         if len(res_data) == 0:
-            r_value_1 = 0
-            r_value_2 = 0
-            r_value_3 = 9999999999999
+            r_value = 'error'
         else:   
-            if str(res_data['status'][0])=='2':
-                r_value_1 = 0
-                r_value_2 = 0
-                r_value_3 = 9999999999999
-            else:
-                r_value_1 = res_data['value_1'][0]
-                r_value_2 = res_data['value_2'][0]
-                r_value_3 = res_data['value_3'][0]
+            r_value = res_data['status'][0]
 
-        res_dict = {'value_1':r_value_1,'value_2':r_value_2,'value_3':r_value_3}
+        res_dict = {'value':r_value}
 
         ans_str = json.dumps(res_dict)
     return ans_str

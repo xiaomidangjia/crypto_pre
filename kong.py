@@ -118,19 +118,21 @@ for i in range(len(last_data)):
     high_p.append(last_data['value'][i]['h'])
     low_p.append(last_data['value'][i]['l'])
 res_data = pd.DataFrame({'date':date,'open':open_p,'close':close_p,'high':high_p,'low':low_p})
+combine_data = res_data
 # 价格不能在最低点
 # 价格大于过去两天
 # 价格超过5日均线值
+last_price = res_data['close'][len(res_data)-1]
 
-low_price = np.min(res_data['close']) * 1.05
-two_max = np.max(res_data['close'][-2:])
-mean_5_day = 0.97 * np.mean(res_data['close'][-5:])
+low_price = np.min(res_data['close'][0:len(res_data)-1]) * 1.05
+two_max = np.max(res_data['close'][len(res_data)-3:len(res_data)-1])
+mean_5_day = 0.97 * np.mean(res_data['close'][len(res_data)-6:len(res_data)-1])
 
-value_1 = np.max([low_price,two_max])
-value_2 = np.max([low_price,mean_5_day])
-
-last_value = np.min([value_1,value_2])
-date_value = res_data['date'][len(res_data)-1] + datetime.timedelta(days=2)
+if last_price > low_price and (last_price > two_max or last_price > mean_5_day):
+    last_value = 1
+else:
+    last_value = 0
+date_value = res_data['date'][len(res_data)-1] + datetime.timedelta(days=1)
 
 # ============================================================================
 def judge_label1():
@@ -431,21 +433,27 @@ if len(date_e) < len(date_s):
     per.append(0)
     res.append(0)
 
-res_df = pd.DataFrame({'date_s':date_s,'date_e':date_e,'open_p':open_p,'close_p':close_p,'per':per,'res':res,'cycle':[num]*len(res)})
+res_df = pd.DataFrame({'date_s':date_s,'date_e':date_e,'open_p':open_p,'close_p':close_p,'per':per,'res':res})
 if str(res_df['date_e'][len(res_df)-1])[0:10] == '2099-12-31':
-    status = 2 # 未知
-    up_date = '2099-12-31'
-elif str(res_df['date_e'][len(res_df)-1])[0:10] != '2099-12-31' and res_df['res'][len(res_df)-1] == 1:
-    status = 1 # 成功
-    up_date = res_df['date_e'][len(res_df)-1]
+    status = 0 # 因为上一个单子没有完成，不开单
+elif str(res_df['date_e'][len(res_df)-1])[0:10] != '2099-12-31' and res_df['res'][len(res_df)-1] == 1 and last_value==1:
+    status = 1 # 上一个单子已经完成，并且是成功的，此次价格又高，所以开单
+elif str(res_df['date_e'][len(res_df)-1])[0:10] != '2099-12-31' and res_df['res'][len(res_df)-1] == 1 and last_value==0:
+    status = 0 # 上一个单子已经完成，并且是成功的，此次价格不符合条件，所以不开单
+elif str(res_df['date_e'][len(res_df)-1])[0:10] != '2099-12-31' and res_df['res'][len(res_df)-1] == 0 and last_value==1:
+    # 上一个单子已经完成，并且是失败的，此次价格符合条件，需要判断是否间隔了5天
+    if (date_value-pd.to_datetime(str(res_df['date_e'][len(res_df)-1])[0:10])).days >=6:
+        status = 1
+    else:
+        status = 0
 else:
-    status = 0 # 失败
-    up_date = res_df['date_e'][len(res_df)-1]
-judge_res = pd.DataFrame({'date':date_value,'value':last_value,'status':status,'up_date':up_date},index=[0])
+    status = 0 #
+judge_res = pd.DataFrame({'date':date_value,'status':status,'up_start':res_df['date_s'][len(res_df)-1],'up_close':res_df['date_e'][len(res_df)-1]},index=[0])
 judge_res.to_csv('res_kong.csv')
 
 #======自动发邮件
-content = create_html_table(judge_res.head(10), f'判断日期{date_value}')
+content_data = pd.concat([judge_res,combine_data[-6:]])
+content = create_html_table(content_data, f'判断日期{date_value}')
 #设置服务器所需信息
 #163邮箱服务器地址
 mail_host = 'smtp.163.com'  
@@ -459,8 +467,3 @@ sender = 'lee_daowei@163.com'
 receivers = ['lee_daowei@163.com']  
 context = f'做空日期判断{date_value}'
 email_sender(mail_host,mail_user,mail_pass,sender,receivers,context,content)
-
-
-
-
-

@@ -118,19 +118,21 @@ for i in range(len(last_data)):
     high_p.append(last_data['value'][i]['h'])
     low_p.append(last_data['value'][i]['l'])
 res_data = pd.DataFrame({'date':date,'open':open_p,'close':close_p,'high':high_p,'low':low_p})
+combine_data = res_data
 # 价格不能在最低点
 # 价格大于过去两天
 # 价格超过5日均线值
+last_price = res_data['close'][len(res_data)-1]
 
-high_price = np.max(res_data['close']) * 0.95
-two_min = np.min(res_data['close'][-2:])
-mean_5_day = 0.985 * np.mean(res_data['close'][-5:])
+high_price = np.max(res_data['close'][0:len(res_data)-1]) * 0.95
+two_min = np.min(res_data['close'][len(res_data)-3:len(res_data)-1])
+mean_5_day = 0.985 * np.mean(res_data['close'][len(res_data)-6:len(res_data)-1])
 
-value_1 = np.min([high_price,two_min]) # 小于
-value_2 = high_price
-value_3 = mean_5_day # 小于value2，大于value3
-
-date_value = res_data['date'][len(res_data)-1] + datetime.timedelta(days=2)
+if last_price < high_price and (last_price < two_min or last_price > mean_5_day):
+    last_value = 1
+else:
+    last_value = 0
+date_value = res_data['date'][len(res_data)-1] + datetime.timedelta(days=1)
 
 def judge_label1():
     url_address = [ 'https://api.glassnode.com/v1/metrics/market/price_usd_ohlc']
@@ -428,18 +430,17 @@ if len(date_e) < len(date_s):
     res.append(0)
 res_df = pd.DataFrame({'date_s':date_s,'date_e':date_e,'open_p':open_p,'close_p':close_p,'per':per,'res':res})
 if str(res_df['date_e'][len(res_df)-1])[0:10] == '2099-12-31':
-    status = 2 # 未知
-    up_date = '2099-12-31'
-elif str(res_df['date_e'][len(res_df)-1])[0:10] != '2099-12-31' and res_df['res'][len(res_df)-1] == 1:
+    status = 0
+elif str(res_df['date_e'][len(res_df)-1])[0:10] != '2099-12-31' and last_value==1:
     status = 1 # 成功
-    up_date = res_df['date_e'][len(res_df)-1]
 else:
     status = 0 # 失败
-    up_date = res_df['date_e'][len(res_df)-1]
-judge_res = pd.DataFrame({'date':date_value,'value_1':value_1,'value_2':value_2,'value_3':value_3,'status':status,'up_date':up_date},index=[0])
+
+judge_res = pd.DataFrame({'date':date_value,'status':status,'up_start':res_df['date_s'][len(res_df)-1],'up_close':res_df['date_e'][len(res_df)-1]},index=[0])
 judge_res.to_csv('res_duo.csv')
 #======自动发邮件
-content = create_html_table(judge_res.head(10), f'判断日期{date_value}')
+content_data = pd.concat([judge_res,combine_data[-6:]])
+content = create_html_table(content_data, f'判断日期{date_value}')
 #设置服务器所需信息
 #163邮箱服务器地址
 mail_host = 'smtp.163.com'  
