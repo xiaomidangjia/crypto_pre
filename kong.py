@@ -452,7 +452,7 @@ judge_res = pd.DataFrame({'date':str(date_value)[0:10],'status':status,'open':in
 judge_res.to_csv('res_kong.csv')
 
 #======自动发邮件
-content = create_html_table(content_data, f'判断日期{date_value}')
+content = create_html_table(judge_res, f'判断日期{date_value}')
 #设置服务器所需信息
 #163邮箱服务器地址
 mail_host = 'smtp.163.com'  
