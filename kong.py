@@ -448,12 +448,10 @@ elif str(res_df['date_e'][len(res_df)-1])[0:10] != '2099-12-31' and res_df['res'
         status = 'no'
 else:
     status = 'no'
-judge_res = pd.DataFrame({'date':date_value,'status':status,'open':combine_data['close'][len(combine_data)-1],'up_start':res_df['date_s'][len(res_df)-1],'up_close':res_df['date_e'][len(res_df)-1]},index=[0])
+judge_res = pd.DataFrame({'date':str(date_value)[0:10],'status':status,'open':int(combine_data['close'][len(combine_data)-1]),'low_price':int(low_price),'two_max':int(two_max),'mean_5_day':int(mean_5_day),'up_start':str(res_df['date_s'][len(res_df)-1])[0:10],'up_close':str(res_df['date_e'][len(res_df)-1])[0:10]},index=[0])
 judge_res.to_csv('res_kong.csv')
 
 #======自动发邮件
-content_data = pd.concat([judge_res,combine_data[-6:]])
-content_data = content_data.reset_index(drop=True)
 content = create_html_table(content_data, f'判断日期{date_value}')
 #设置服务器所需信息
 #163邮箱服务器地址
