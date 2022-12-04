@@ -440,6 +440,7 @@ judge_res = pd.DataFrame({'date':date_value,'status':status,'up_start':res_df['d
 judge_res.to_csv('res_duo.csv')
 #======自动发邮件
 content_data = pd.concat([judge_res,combine_data[-6:]])
+content_data = content_data.reset_index(drop=True)
 content = create_html_table(content_data, f'判断日期{date_value}')
 #设置服务器所需信息
 #163邮箱服务器地址
