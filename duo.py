@@ -430,13 +430,13 @@ if len(date_e) < len(date_s):
     res.append(0)
 res_df = pd.DataFrame({'date_s':date_s,'date_e':date_e,'open_p':open_p,'close_p':close_p,'per':per,'res':res})
 if str(res_df['date_e'][len(res_df)-1])[0:10] == '2099-12-31':
-    status = 0
+    status = 'no'
 elif str(res_df['date_e'][len(res_df)-1])[0:10] != '2099-12-31' and last_value==1:
-    status = 1 # 成功
+    status = 'yes' # 成功
 else:
-    status = 0 # 失败
+    status = 'no' # 失败
 
-judge_res = pd.DataFrame({'date':date_value,'status':status,'up_start':res_df['date_s'][len(res_df)-1],'up_close':res_df['date_e'][len(res_df)-1]},index=[0])
+judge_res = pd.DataFrame({'date':date_value,'status':status,'open':combine_data['close'][len(combine_data)-1],'up_start':res_df['date_s'][len(res_df)-1],'up_close':res_df['date_e'][len(res_df)-1]},index=[0])
 judge_res.to_csv('res_duo.csv')
 #======自动发邮件
 content_data = pd.concat([judge_res,combine_data[-6:]])

@@ -435,20 +435,20 @@ if len(date_e) < len(date_s):
 
 res_df = pd.DataFrame({'date_s':date_s,'date_e':date_e,'open_p':open_p,'close_p':close_p,'per':per,'res':res})
 if str(res_df['date_e'][len(res_df)-1])[0:10] == '2099-12-31':
-    status = 0 # 因为上一个单子没有完成，不开单
+    status = 'no' # 因为上一个单子没有完成，不开单
 elif str(res_df['date_e'][len(res_df)-1])[0:10] != '2099-12-31' and res_df['res'][len(res_df)-1] == 1 and last_value==1:
-    status = 1 # 上一个单子已经完成，并且是成功的，此次价格又高，所以开单
+    status = 'yes' # 上一个单子已经完成，并且是成功的，此次价格又高，所以开单
 elif str(res_df['date_e'][len(res_df)-1])[0:10] != '2099-12-31' and res_df['res'][len(res_df)-1] == 1 and last_value==0:
-    status = 0 # 上一个单子已经完成，并且是成功的，此次价格不符合条件，所以不开单
+    status = 'no' # 上一个单子已经完成，并且是成功的，此次价格不符合条件，所以不开单
 elif str(res_df['date_e'][len(res_df)-1])[0:10] != '2099-12-31' and res_df['res'][len(res_df)-1] == 0 and last_value==1:
     # 上一个单子已经完成，并且是失败的，此次价格符合条件，需要判断是否间隔了5天
     if (date_value-pd.to_datetime(str(res_df['date_e'][len(res_df)-1])[0:10])).days >=6:
-        status = 1
+        status = 'yes'
     else:
-        status = 0
+        status = 'no'
 else:
-    status = 0 #
-judge_res = pd.DataFrame({'date':date_value,'status':status,'up_start':res_df['date_s'][len(res_df)-1],'up_close':res_df['date_e'][len(res_df)-1]},index=[0])
+    status = 'no'
+judge_res = pd.DataFrame({'date':date_value,'status':status,'open':combine_data['close'][len(combine_data)-1],'up_start':res_df['date_s'][len(res_df)-1],'up_close':res_df['date_e'][len(res_df)-1]},index=[0])
 judge_res.to_csv('res_kong.csv')
 
 #======自动发邮件
