@@ -40,9 +40,9 @@ def crypto_pre():
         else:
             value = res_data['value'][0]
 
-            if res_data['status'][0]==2:
+            if str(res_data['status'][0])=='2':
                 r_value = 9999999999999
-            elif res_data['status'][0]==0:
+            elif str(res_data['status'][0])=='0':
                 if (pd.to_datetime(res_data['date'][0]) - pd.to_datetime(res_data['up_date'][0]) ).days >= 6:
                     r_value = value
                 else:
@@ -79,7 +79,7 @@ def crypto_pre():
             r_value_2 = 0
             r_value_3 = 9999999999999
         else:   
-            if res_data['status'][0]==2:
+            if str(res_data['status'][0])=='2':
                 r_value_1 = 0
                 r_value_2 = 0
                 r_value_3 = 9999999999999
