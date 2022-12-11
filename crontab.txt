@@ -68,7 +68,7 @@ stderr_logfile_backups=10
 ps -ef | grep supervisord
 kill -s SIGTERM 5241
 
-
+nohup ./robot -s node.fmz.com/81144217 -p  Lww_130130130 &
 
 Ubuntu开机自启
 

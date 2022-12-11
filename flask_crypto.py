@@ -17,7 +17,7 @@ def crypto_pre():
     type_ = request.form.get('type')
     crypto = request.form.get('crypto')
 
-    if type_ == 'kong' and crypto = 'btc':
+    if type_ == 'kong' and crypto == 'btc':
 
         p = []
         with open("/root/crypto_pre/res_btc_kong.csv", 'r', encoding="UTF-8") as fr:
@@ -41,7 +41,7 @@ def crypto_pre():
         res_dict = {'value':r_value}
 
         ans_str = json.dumps(res_dict)
-    elif type_ == 'duo' and crypto = 'btc':
+    elif type_ == 'duo' and crypto == 'btc':
         p = []
         with open("/root/crypto_pre/res_btc_duo.csv", 'r', encoding="UTF-8") as fr:
             reader = csv.reader(fr)
@@ -66,7 +66,7 @@ def crypto_pre():
         res_dict = {'value':r_value}
 
         ans_str = json.dumps(res_dict)
-    elif type_ == 'kong' and crypto = 'eth':
+    elif type_ == 'kong' and crypto == 'eth':
 
         p = []
         with open("/root/crypto_pre/res_eth_kong.csv", 'r', encoding="UTF-8") as fr:
