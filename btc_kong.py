@@ -448,7 +448,7 @@ elif str(res_df['date_e'][len(res_df)-1])[0:10] != '2099-12-31' and res_df['res'
         status = 'no'
 else:
     status = 'no'
-judge_res = pd.DataFrame({'date':str(date_value)[0:10],'status':status,'open':int(combine_data['close'][len(combine_data)-1]),'low_price':int(low_price),'two_max':int(two_max),'mean_5_day':int(mean_5_day),'up_start':str(res_df['date_s'][len(res_df)-1])[0:10],'up_close':str(res_df['date_e'][len(res_df)-1])[0:10]},index=[0])
+judge_res = pd.DataFrame({'date':str(date_value)[0:10],'status':status,'open':int(combine_data['close'][len(combine_data)-1]),'low_price':int(low_price),'two_max':int(two_max),'mean_5_day':int(mean_5_day),'up_start':str(res_df['date_s'][len(res_df)-1])[0:10],'up_close':str(res_df['date_e'][len(res_df)-1])[0:10],'up_price':res_df['open_p'][len(res_df)-1]},index=[0])
 judge_res.to_csv('res_btc_kong.csv')
 
 #======自动发邮件
