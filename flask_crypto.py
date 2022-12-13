@@ -30,8 +30,8 @@ def crypto_pre():
         res_data['date'] = res_data.iloc[:,1]
         res_data['status'] = res_data.iloc[:,2]
         res_data['today_price'] = res_data.iloc[:,3]
-        res_data['up_close_date'] = res_data.iloc[:,7]
-        res_data['up_start_price'] = res_data.iloc[:,8]
+        res_data['up_close_date'] = res_data.iloc[:,8]
+        res_data['up_start_price'] = res_data.iloc[:,9]
 
         res_data['date'] = pd.to_datetime(res_data['date'])
 
@@ -62,8 +62,8 @@ def crypto_pre():
         res_data['date'] = res_data.iloc[:,1]
         res_data['status'] = res_data.iloc[:,2]
         res_data['today_price'] = res_data.iloc[:,3]
-        res_data['up_close_date'] = res_data.iloc[:,7]
-        res_data['up_start_price'] = res_data.iloc[:,8]
+        res_data['up_close_date'] = res_data.iloc[:,8]
+        res_data['up_start_price'] = res_data.iloc[:,9]
 
         res_data['date'] = pd.to_datetime(res_data['date'])
         #res_data['up_date'] = pd.to_datetime(res_data['up_date'])
@@ -96,8 +96,8 @@ def crypto_pre():
         res_data['date'] = res_data.iloc[:,1]
         res_data['status'] = res_data.iloc[:,2]
         res_data['today_price'] = res_data.iloc[:,3]
-        res_data['up_close_date'] = res_data.iloc[:,7]
-        res_data['up_start_price'] = res_data.iloc[:,8]
+        res_data['up_close_date'] = res_data.iloc[:,8]
+        res_data['up_start_price'] = res_data.iloc[:,9]
 
         res_data['date'] = pd.to_datetime(res_data['date'])
 
@@ -128,8 +128,8 @@ def crypto_pre():
         res_data['date'] = res_data.iloc[:,1]
         res_data['status'] = res_data.iloc[:,2]
         res_data['today_price'] = res_data.iloc[:,3]
-        res_data['up_close_date'] = res_data.iloc[:,7]
-        res_data['up_start_price'] = res_data.iloc[:,8]
+        res_data['up_close_date'] = res_data.iloc[:,8]
+        res_data['up_start_price'] = res_data.iloc[:,9]
 
         res_data['date'] = pd.to_datetime(res_data['date'])
         #res_data['up_date'] = pd.to_datetime(res_data['up_date'])
