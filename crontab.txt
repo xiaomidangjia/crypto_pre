@@ -1,3 +1,12 @@
+安装anaconda 
+
+wget https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/Anaconda3-2020.07-Linux-x86_64.sh
+sh Anaconda3-2020.07-Linux-x86_64.sh
+echo 'export PATH="./anaconda3/bin:$PATH"'>>~/.bashrc
+source ~/.bashrc
+
+
+
 1. 写好代码 ***.py
 
 2. 写对应的shell文件 ***.sh
@@ -22,6 +31,14 @@ pip install supervisor
 
 mkdir /etc/supervisor
 echo_supervisord_conf > /etc/supervisor/supervisord.conf
+----
+如果出现echo_supervisord_conf: command not **found** 则可能需要输入全路径，使用
+find / -name echo_supervisord_conf*找到路径
+----
+
+
+安装gunicorn
+/root/anaconda3/bin/pip3 install gunicorn
 
 
 [include]
@@ -29,36 +46,20 @@ echo_supervisord_conf > /etc/supervisor/supervisord.conf
 
 在这个下面加入各个执行程序，如：
 
-[program:test_mask_img]
-command=/root/anaconda3/bin/gunicorn -c config_mask_img.py test_mask_img:app                                ; supervisor启动命令
-directory=/root/disk/liweiwei/modelDeploy/mmdetection/flask                            ; 项目的文件夹路径
+[program:test_crypto]
+command=/root/anaconda3/bin/gunicorn -c config_crypto.py flask_crypto:app                                ; supervisor启动命令
+directory=/root/crypto_pre                            ; 项目的文件夹路径
 startsecs=0                                                                             ; 启动时间
 stopwaitsecs=0                                                                          ; 终止等待时间
 autostart=true                                                                         ; 是否自动启动
 autorestart=true                                                                       ; 是否自动重启
-stdout_logfile=/root/disk/liweiwei/modelDeploy/mmdetection/flask/logs/test_mask_img.log      ; log 日志
-stderr_logfile=/root/disk/liweiwei/modelDeploy/mmdetection/flask/logs/test_mask_img.err
+stdout_logfile=/root/crypto_pre/test_instruction.log      ; log 日志
+stderr_logfile=/root/crypto_pre/test_instruction.err
 redirect_stderr=true
 stdout_logfile_maxbytes=250MB  ; 最多保留多少份日志文件
 stdout_logfile_backups=10
 stderr_logfile_maxbytes=250MB
 stderr_logfile_backups=10
-
-[program:test_face_helmet]
-command=/root/anaconda3/bin/python test_face_helmet.py                              ; supervisor启动命令
-directory=/root/disk/liweiwei/modelDeploy/face_recong/flask                            ; 项目的文件夹路径
-startsecs=0                                                                             ; 启动时间
-stopwaitsecs=0                                                                          ; 终止等待时间
-autostart=true                                                                         ; 是否自动启动
-autorestart=true                                                                       ; 是否自动重启
-stdout_logfile=/root/disk/liweiwei/modelDeploy/face_recong/flask/logs/test_face_helmet.log      ; log 日志
-stderr_logfile=/root/disk/liweiwei/modelDeploy/face_recong/flask/logs/test_face_helmet.err
-redirect_stderr=true
-stdout_logfile_maxbytes=250MB  ; 最多保留多少份日志文件
-stdout_logfile_backups=10
-stderr_logfile_maxbytes=250MB
-stderr_logfile_backups=10
-
 
 
 启动服务：
@@ -76,3 +77,28 @@ Ubuntu开机自启
 
 export LD_LIBRARY_PATH=/usr/local/cuda-10.0/lib64
 /root/anaconda3/bin/supervisord -c /etc/supervisor/supervisord.conf
+
+
+在部署托管着的时候，要单独安装python3
+步骤如下：
+yum install zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel readline-devel tk-devel gcc make libffi-devel
+ 
+yum install gcc gcc-c++ openssl-devel libffi-devel tk-devel
+#下载python3
+wget https://www.python.org/ftp/python/3.8.5/Python-3.8.5.tgz
+
+tar -zxvf Python-3.8.5.tgz  
+ 
+cd Python-3.8.5
+ 
+# 配置安装位置
+./configure prefix=/usr/local/python3
+ 
+# 安装
+make && make install
+
+#添加python3的软链接 
+ln -s /usr/local/python3/bin/python3.8 /usr/bin/python3 
+ 
+#添加 pip3 的软链接 
+ln -s /usr/local/python3/bin/pip3.8 /usr/bin/pip3

@@ -123,17 +123,15 @@ combine_data = res_data
 # 价格大于过去两天
 # 价格超过5日均线值
 last_price = res_data['close'][len(res_data)-1]
-
 if last_price == np.max(res_data['close']):
     zuigao = 1
 else:
     zuigao = 0
-
 high_price = np.max(res_data['close'][0:len(res_data)-1]) * 0.95
 two_min = np.min(res_data['close'][len(res_data)-3:len(res_data)-1])
 mean_5_day = 0.985 * np.mean(res_data['close'][len(res_data)-6:len(res_data)-1])
 
-if zuigao = 1:
+if zuigao == 1:
     last_value = 9
 elif last_price > high_price:
     last_value = 1
