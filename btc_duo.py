@@ -124,11 +124,18 @@ combine_data = res_data
 # 价格超过5日均线值
 last_price = res_data['close'][len(res_data)-1]
 
+if last_price == np.max(res_data['close']):
+    zuigao = 1
+else:
+    zuigao = 0
+
 high_price = np.max(res_data['close'][0:len(res_data)-1]) * 0.95
 two_min = np.min(res_data['close'][len(res_data)-3:len(res_data)-1])
 mean_5_day = 0.985 * np.mean(res_data['close'][len(res_data)-6:len(res_data)-1])
 
-if last_price > high_price:
+if zuigao = 1:
+    last_value = 9
+elif last_price > high_price:
     last_value = 1
 elif last_price < high_price and (last_price < two_min or last_price > mean_5_day):
     last_value = 1
@@ -434,7 +441,9 @@ res_df = pd.DataFrame({'date_s':date_s,'date_e':date_e,'open_p':open_p,'close_p'
 if str(res_df['date_e'][len(res_df)-1])[0:10] == '2099-12-31':
     status = 'no'
 elif str(res_df['date_e'][len(res_df)-1])[0:10] != '2099-12-31' and last_value==1:
-    status = 'yes' # 成功
+    status = 'yes_1' # 成功
+elif str(res_df['date_e'][len(res_df)-1])[0:10] != '2099-12-31' and last_value==9:
+    status = 'yes_2' # 成功
 else:
     status = 'no' # 失败
 
