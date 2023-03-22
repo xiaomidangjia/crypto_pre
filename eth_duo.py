@@ -128,7 +128,9 @@ high_price = np.max(res_data['close'][0:len(res_data)-1]) * 0.95
 two_min = np.min(res_data['close'][len(res_data)-3:len(res_data)-1])
 mean_5_day = 0.985 * np.mean(res_data['close'][len(res_data)-6:len(res_data)-1])
 
-if last_price < high_price and (last_price < two_min or last_price > mean_5_day):
+if last_price > high_price:
+    last_value = 1
+elif last_price < high_price and (last_price < two_min or last_price > mean_5_day):
     last_value = 1
 else:
     last_value = 0
@@ -200,7 +202,8 @@ def judge_label1():
         if close_j - np.min(ele) < 0:
             judge_l3_min = 1
         else:
-            judge_l3_min = 0  
+            judge_l3_min = 0
+
         dat = pd.DataFrame({'date':date_j,'open':open_j,'close':close_j,'high':high_j,'low':low_j,'judge_l3_min':judge_l3_min,'judge_his':judge_duo},index=[0])
         res = pd.concat([res,dat])
     return res
@@ -348,7 +351,7 @@ while i < len(last_df)-1:
     judge_his = last_df['judge_his'][i]
     ma5_duo = last_df['ma5_duo'][i]
     judge_l3_min = last_df['judge_l3_min'][i]
-    if judge_his == 1 and  (judge_l3_min == 1 or  ma5_duo == 1):
+    if (judge_his == 1 and  (judge_l3_min == 1 or  ma5_duo == 1)) or judge_his ==0:
         open_price = last_df['open'][i+1]
         start_date = last_df['date'][i+1]
         print(start_date)
