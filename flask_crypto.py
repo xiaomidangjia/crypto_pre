@@ -32,7 +32,7 @@ def crypto_pre():
         res_data['today_price'] = res_data.iloc[:,3]
         res_data['up_close_date'] = res_data.iloc[:,8]
         res_data['up_start_price'] = res_data.iloc[:,9]
-
+        res_data['zuigao'] = res_data.iloc[:,10]
         res_data['date'] = pd.to_datetime(res_data['date'])
 
         res_data = res_data[res_data.date==pd.to_datetime(date)]
@@ -41,13 +41,15 @@ def crypto_pre():
             today_price = 0
             up_close_date = 0
             up_start_price = 0
+            zuigao = 0
         else:
             r_value = res_data['status'][0]
             today_price = res_data['today_price'][0]
             up_close_date = res_data['up_close_date'][0]
             up_start_price = res_data['up_start_price'][0]
+            zuigao = res_data['zuigao'][0]
 
-        res_dict = {'value':r_value,'today_price':today_price,'up_close_date':up_close_date,'up_start_price':up_start_price}
+        res_dict = {'value':r_value,'today_price':today_price,'up_close_date':up_close_date,'up_start_price':up_start_price,'zuigao':zuigao}
 
         ans_str = json.dumps(res_dict)
     elif type_ == 'duo' and crypto == 'btc':
@@ -64,7 +66,7 @@ def crypto_pre():
         res_data['today_price'] = res_data.iloc[:,3]
         res_data['up_close_date'] = res_data.iloc[:,8]
         res_data['up_start_price'] = res_data.iloc[:,9]
-
+        res_data['zuigao'] = res_data.iloc[:,10]
         res_data['date'] = pd.to_datetime(res_data['date'])
         #res_data['up_date'] = pd.to_datetime(res_data['up_date'])
         res_data = res_data[res_data.date==pd.to_datetime(date)]
@@ -74,13 +76,15 @@ def crypto_pre():
             today_price = 0
             up_close_date = 0
             up_start_price = 0
+            zuigao = 0
         else:   
             r_value = res_data['status'][0]
             today_price = res_data['today_price'][0]
             up_close_date = res_data['up_close_date'][0]
             up_start_price = res_data['up_start_price'][0]
+            zuigao = res_data['zuigao'][0]
 
-        res_dict = {'value':r_value,'today_price':today_price,'up_close_date':up_close_date,'up_start_price':up_start_price}
+        res_dict = {'value':r_value,'today_price':today_price,'up_close_date':up_close_date,'up_start_price':up_start_price,'zuigao':zuigao}
 
         ans_str = json.dumps(res_dict)
     elif type_ == 'kong' and crypto == 'eth':
@@ -98,7 +102,7 @@ def crypto_pre():
         res_data['today_price'] = res_data.iloc[:,3]
         res_data['up_close_date'] = res_data.iloc[:,8]
         res_data['up_start_price'] = res_data.iloc[:,9]
-
+        res_data['zuigao'] = res_data.iloc[:,10]
         res_data['date'] = pd.to_datetime(res_data['date'])
 
         res_data = res_data[res_data.date==pd.to_datetime(date)]
@@ -107,13 +111,15 @@ def crypto_pre():
             today_price = 0
             up_close_date = 0
             up_start_price = 0
+            zuigao = 0
         else:
             r_value = res_data['status'][0]
             today_price = res_data['today_price'][0]
             up_close_date = res_data['up_close_date'][0]
             up_start_price = res_data['up_start_price'][0]
+            zuigao = res_data['zuigao'][0]
 
-        res_dict = {'value':r_value,'today_price':today_price,'up_close_date':up_close_date,'up_start_price':up_start_price}
+        res_dict = {'value':r_value,'today_price':today_price,'up_close_date':up_close_date,'up_start_price':up_start_price,'zuigao':zuigao}
 
         ans_str = json.dumps(res_dict)
     else:
@@ -130,7 +136,7 @@ def crypto_pre():
         res_data['today_price'] = res_data.iloc[:,3]
         res_data['up_close_date'] = res_data.iloc[:,8]
         res_data['up_start_price'] = res_data.iloc[:,9]
-
+        res_data['zuigao'] = res_data.iloc[:,10]
         res_data['date'] = pd.to_datetime(res_data['date'])
         #res_data['up_date'] = pd.to_datetime(res_data['up_date'])
         res_data = res_data[res_data.date==pd.to_datetime(date)]
@@ -140,13 +146,15 @@ def crypto_pre():
             today_price = 0
             up_close_date = 0
             up_start_price = 0
+            zuigao = 0
         else:   
             r_value = res_data['status'][0]
             today_price = res_data['today_price'][0]
             up_close_date = res_data['up_close_date'][0]
             up_start_price = res_data['up_start_price'][0]
+            zuigao = res_data['zuigao'][0]
 
-        res_dict = {'value':r_value,'today_price':today_price,'up_close_date':up_close_date,'up_start_price':up_start_price}
+        res_dict = {'value':r_value,'today_price':today_price,'up_close_date':up_close_date,'up_start_price':up_start_price,'zuigao':zuigao}
 
         ans_str = json.dumps(res_dict)
     return ans_str
