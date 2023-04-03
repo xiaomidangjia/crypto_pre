@@ -446,7 +446,7 @@ elif str(res_df['date_e'][len(res_df)-1])[0:10] != '2099-12-31' and last_value==
 else:
     status = 'no' # 失败
 
-judge_res = pd.DataFrame({'date':str(date_value)[0:10],'status':status,'open':int(combine_data['close'][len(combine_data)-1]),'high_price':int(high_price),'two_min':int(two_min),'mean_5_day':int(mean_5_day),'up_start':str(res_df['date_s'][len(res_df)-1])[0:10],'up_close':str(res_df['date_e'][len(res_df)-1])[0:10],'up_price':res_df['open_p'][len(res_df)-1]},index=[0])
+judge_res = pd.DataFrame({'date':str(date_value)[0:10],'status':status,'zuigao':zuigao,'open':int(combine_data['close'][len(combine_data)-1]),'high_price':int(high_price),'two_min':int(two_min),'mean_5_day':int(mean_5_day),'up_start':str(res_df['date_s'][len(res_df)-1])[0:10],'up_close':str(res_df['date_e'][len(res_df)-1])[0:10],'up_price':res_df['open_p'][len(res_df)-1]},index=[0])
 judge_res.to_csv('res_eth_duo.csv')
 #======自动发邮件
 content = create_html_table(judge_res, f'ETH判断日期{date_value}')
