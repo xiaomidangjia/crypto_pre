@@ -368,7 +368,7 @@ while i < len(last_df)-1:
         print(start_date)
         open_p.append(open_price)
         date_s.append(start_date)
-        zuigao_p.append(last_df['judge_zuigao'][i+1])
+        zuigao_p.append(last_df['judge_zuigao'][i])
         sub_later_data = res_data[res_data.new_date>=start_date]
         sub_later_data = sub_later_data.sort_values(by=['new_date','hour'])
         sub_later_data = sub_later_data.reset_index(drop=True)
