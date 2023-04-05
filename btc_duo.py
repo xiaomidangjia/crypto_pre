@@ -209,10 +209,11 @@ def judge_label1():
         else:
             judge_l3_min = 0 
 
-        if close_j == np.max(ins['close']):
+        if (close_j - np.max(ins['close']))/np.max(ins['close']) < -0.01:
             judge_zuigao = 1
         else:
-            judge_zuigao = 0 
+            judge_zuigao = 0
+
         dat = pd.DataFrame({'date':date_j,'open':open_j,'close':close_j,'high':high_j,'low':low_j,'judge_l3_min':judge_l3_min,'judge_his':judge_duo,'judge_zuigao':judge_zuigao},index=[0])
         res = pd.concat([res,dat])
     return res
