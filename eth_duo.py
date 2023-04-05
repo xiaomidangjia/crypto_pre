@@ -209,7 +209,12 @@ def judge_label1():
         else:
             judge_l3_min = 0
 
-        dat = pd.DataFrame({'date':date_j,'open':open_j,'close':close_j,'high':high_j,'low':low_j,'judge_l3_min':judge_l3_min,'judge_his':judge_duo},index=[0])
+        if close_j == np.max(ins['close']):
+            judge_zuigao = 1
+        else:
+            judge_zuigao = 0
+
+        dat = pd.DataFrame({'date':date_j,'open':open_j,'close':close_j,'high':high_j,'low':low_j,'judge_l3_min':judge_l3_min,'judge_his':judge_duo,'judge_zuigao':judge_zuigao},index=[0])
         res = pd.concat([res,dat])
     return res
 def judge_label2():
@@ -348,6 +353,7 @@ date_s = []
 date_e = []
 open_p = []
 close_p = []
+zuigao_p = []
 res = []
 per = []
 i = 0
@@ -362,6 +368,7 @@ while i < len(last_df)-1:
         print(start_date)
         open_p.append(open_price)
         date_s.append(start_date)
+        zuigao_p.append(last_df['judge_zuigao'][i+1])
         sub_later_data = res_data[res_data.new_date>=start_date]
         sub_later_data = sub_later_data.sort_values(by=['new_date','hour'])
         sub_later_data = sub_later_data.reset_index(drop=True)
@@ -436,7 +443,7 @@ if len(date_e) < len(date_s):
     close_p.append(999999999)
     per.append(0)
     res.append(0)
-res_df = pd.DataFrame({'date_s':date_s,'date_e':date_e,'open_p':open_p,'close_p':close_p,'per':per,'res':res})
+res_df = pd.DataFrame({'date_s':date_s,'date_e':date_e,'open_p':open_p,'close_p':close_p,'per':per,'res':res,'zuigao':zuigao_p})
 if str(res_df['date_e'][len(res_df)-1])[0:10] == '2099-12-31':
     status = 'no'
 elif str(res_df['date_e'][len(res_df)-1])[0:10] != '2099-12-31' and last_value==1:
@@ -446,7 +453,7 @@ elif str(res_df['date_e'][len(res_df)-1])[0:10] != '2099-12-31' and last_value==
 else:
     status = 'no' # 失败
 
-judge_res = pd.DataFrame({'date':str(date_value)[0:10],'status':status,'open':int(combine_data['close'][len(combine_data)-1]),'high_price':int(high_price),'two_min':int(two_min),'mean_5_day':int(mean_5_day),'up_start':str(res_df['date_s'][len(res_df)-1])[0:10],'up_close':str(res_df['date_e'][len(res_df)-1])[0:10],'up_price':res_df['open_p'][len(res_df)-1],'zuigao':zuigao},index=[0])
+judge_res = pd.DataFrame({'date':str(date_value)[0:10],'status':status,'open':int(combine_data['close'][len(combine_data)-1]),'high_price':int(high_price),'two_min':int(two_min),'mean_5_day':int(mean_5_day),'up_start':str(res_df['date_s'][len(res_df)-1])[0:10],'up_close':str(res_df['date_e'][len(res_df)-1])[0:10],'up_price':res_df['open_p'][len(res_df)-1],'zuigao':res_df['zuigao'][len(res_df)-1]},index=[0])
 judge_res.to_csv('res_eth_duo.csv')
 #======自动发邮件
 content = create_html_table(judge_res, f'ETH判断日期{date_value}')
