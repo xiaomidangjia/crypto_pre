@@ -209,7 +209,7 @@ def judge_label1():
         else:
             judge_l3_min = 0
 
-        if (close_j - np.max(ins['close']))/np.max(ins['close']) < -0.01:
+        if close_j >= np.max(ins['close']):
             judge_zuigao = 1
         else:
             judge_zuigao = 0
