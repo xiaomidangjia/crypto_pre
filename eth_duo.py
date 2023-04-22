@@ -119,6 +119,76 @@ for i in range(len(last_data)):
     low_p.append(last_data['value'][i]['l'])
 res_data = pd.DataFrame({'date':date,'open':open_p,'close':close_p,'high':high_p,'low':low_p})
 combine_data = res_data
+# 引入永续合约流动性的概念
+url_address = ['https://api.glassnode.com/v1/metrics/derivatives/futures_liquidated_volume_long_relative',
+              'https://api.glassnode.com/v1/metrics/market/price_usd_close']
+url_name = ['futures','price']
+# insert your API key here
+API_KEY = '26BLocpWTcSU7sgqDdKzMHMpJDm'
+data_list = []
+for num in range(len(url_name)):
+    print(num)
+    addr = url_address[num]
+    name = url_name[num]
+    # make API request
+    res_addr = requests.get(addr,params={'a': 'BTC', 'api_key': API_KEY})
+    # convert to pandas dataframe
+    ins = pd.read_json(res_addr.text, convert_dates=['t'])
+    #ins.to_csv('test.csv')
+    #print(ins['o'])
+    #print(ins)
+    ins['date'] =  ins['t']
+    ins['value'] =  ins['v']
+    ins = ins[['date','value']]
+    data_list.append(ins)
+result_data = data_list[0][['date']]
+for i in range(len(data_list)):
+    df = data_list[i]
+    result_data = result_data.merge(df,how='left',on='date')
+#last_data = result_data[(result_data.date>='2016-01-01') & (result_data.date<='2020-01-01')]
+futures_data = result_data[(result_data.date>='2013-01-01')]
+futures_data = futures_data.sort_values(by=['date'])
+futures_data = futures_data.reset_index(drop=True)
+futures_data['next_value'] = futures_data['value_y'].shift(-1)
+flag_1 = []
+flag_2 = []
+flag_3 = []
+for i in range(len(futures_data)):
+    if futures_data['next_value'][i] > futures_data['value_y'][i]:
+        flag_1.append(1)
+    else:
+        flag_1.append(0)
+    if futures_data['value_x'][i] > 0.5:
+        flag_2.append(1)
+    else:
+        flag_2.append(0)
+futures_data['flag_1'] = flag_1
+futures_data['flag_2'] = flag_2
+for i in range(len(futures_data)):
+    if futures_data['flag_1'][i] == futures_data['flag_2'][i]:
+        flag_3.append(1)
+    else:
+        flag_3.append(0)
+futures_data['flag_3'] = flag_3
+if futures_value_1 > 0.5 and futures_value_2 > 0.8 and futures_value_3 > 0.8 and futures_accury_2 == 0 and futures_accury_3 == 0:
+    pingjia = 'duotou_finish_kill'
+elif futures_value_1 > 0.8 and futures_value_2 > 0.8 and futures_accury_2 == 0:
+    pingjia = 'duotou_ing_kill'
+elif futures_value_1 > 0.8 and futures_value_2 < 0.5 and futures_accury_2 == 1:
+    pingjia = 'duotou_start_kill'
+elif futures_value_1 < 0.5 and futures_value_2 < 0.2 and futures_value_3 < 0.2 and futures_accury_2 == 0 and futures_accury_3 == 0:
+    pingjia = 'kongtou_finish_kill'
+elif futures_value_1 < 0.2 and futures_value_2 < 0.2 and futures_accury_2 == 0:
+    pingjia = 'kongtou_ing_kill'
+elif futures_value_1 < 0.2 and futures_value_2 > 0.5 and futures_accury_2 == 1:
+    pingjia = 'kongtou_start_kill'
+elif futures_value_1 > 0.5:
+    pingjia = 'duotou_main'
+elif futures_value_1 < 0.5:
+    pingjia = 'kongtou_main'
+else:
+    pingjia = 'unknow_reason'
+
 # 价格不能在最低点
 # 价格大于过去两天
 # 价格超过5日均线值
@@ -446,8 +516,10 @@ if len(date_e) < len(date_s):
 res_df = pd.DataFrame({'date_s':date_s,'date_e':date_e,'open_p':open_p,'close_p':close_p,'per':per,'res':res,'zuigao':zuigao_p})
 if str(res_df['date_e'][len(res_df)-1])[0:10] == '2099-12-31':
     status = 'no'
-elif str(res_df['date_e'][len(res_df)-1])[0:10] != '2099-12-31' and last_value==1:
-    status = 'yes_1' # 成功
+elif str(res_df['date_e'][len(res_df)-1])[0:10] != '2099-12-31' and last_value==1 and pingjia in ('duotou_main','duotou_finish_kill','kongtou_start_kill','kongtou_ing_kill'):
+    status = 'yes_right_now' # 成功
+elif str(res_df['date_e'][len(res_df)-1])[0:10] != '2099-12-31' and last_value==1 and pingjia in ('kongtou_main'):
+    status = 'yes_wait' # 成功
 elif str(res_df['date_e'][len(res_df)-1])[0:10] != '2099-12-31' and last_value==9:
     status = 'yes_2' # 成功
 else:
