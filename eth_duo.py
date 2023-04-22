@@ -170,6 +170,11 @@ for i in range(len(futures_data)):
     else:
         flag_3.append(0)
 futures_data['flag_3'] = flag_3
+futures_value_1 = futures_data['value_x'][len(futures_data)-1]
+futures_value_2 = futures_data['value_x'][len(futures_data)-2]
+futures_value_3 = futures_data['value_x'][len(futures_data)-3]
+futures_accury_2 = futures_data['flag_3'][len(futures_data)-2]
+futures_accury_3 = futures_data['flag_3'][len(futures_data)-3]
 if futures_value_1 > 0.5 and futures_value_2 > 0.8 and futures_value_3 > 0.8 and futures_accury_2 == 0 and futures_accury_3 == 0:
     pingjia = 'duotou_finish_kill'
 elif futures_value_1 > 0.8 and futures_value_2 > 0.8 and futures_accury_2 == 0:
